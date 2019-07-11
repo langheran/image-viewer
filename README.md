@@ -1,6 +1,6 @@
 ## Image Viewer <!-- omit in toc -->
 
-![start with why](https://img.shields.io/badge/autohotkey%20build-passing-brightgreen.svg?style=flat) ![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![start with why](https://img.shields.io/badge/autohotkey%20build-passing-brightgreen.svg?style=flat) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/langheran/image-viewer/master/LICENSE.md)
 - [Global keys](#global-keys)
 - [Local (window focused) keys](#local-window-focused-keys)
 - [Docked view](#docked-view)
