@@ -242,6 +242,8 @@ UpdateRecentSessions()
 i:=1
 for k, v in recentSessions
 {
+    if(i>=9)
+        break
 	if(command<>v || True)
 	{
 		shorcut_number:=i
@@ -261,6 +263,8 @@ RebuildRecentCommands(command)
 i:=1
 for k, v in recentCommands
 {
+    if(i>=9)
+        break
 	if(command<>v || True)
 	{
 		shorcut_number:=i
@@ -279,7 +283,7 @@ Menu, Tray, Add
 i:=1
 Loop, Files, %clipboardDirectory%\*.*
 {
-    if(i>10)
+    if(i>=9)
         break
     if A_LoopFileExt in png
     {
