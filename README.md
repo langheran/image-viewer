@@ -54,6 +54,7 @@
 | y     |  Dock Y position.          |
 | ^y     |  Dock Y position using stack distance.          |
 | +y     |  Remove all windows from Y stack.          |
+| t     |  Toggle transparency.          |
 
 
 ### Docked view

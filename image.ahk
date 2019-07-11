@@ -1455,6 +1455,34 @@ if(stackWindows)
     IniDelete,%A_ScriptDir%\image.ini,stackY
 return
 
+t::
+ToggleTransparency:
+IniRead, transparency, %A_ScriptDir%\image.ini, %imageFile%, transparency, 0
+if(transparency<>0 and transparency<>1)
+    transparency:=0
+transparency:=!transparency
+IniWrite, %transparency%, %A_ScriptDir%\image.ini, %imageFile%, transparency
+if(transparency)
+    ToolTip, Transparency ON,%toolTipX%,%toolTipY%
+else
+    ToolTip, Transparency OFF,%toolTipX%,%toolTipY%
+SetTimer, viewTitle, -1000
+SetTransparency:
+    if(transparency)
+    {
+        If(WinActive("ahk_id " . this_id))
+        {
+            WinSet, Transparent, Off, % "ahk_id " . this_id
+            WinSet, ExStyle, -0x20, % "ahk_pid " . DllCall("GetCurrentProcessId")
+        }
+        else
+        {
+            WinSet, Transparent, % (255*transparency/3), % "ahk_id " . this_id
+            WinSet, ExStyle, +0x20, % "ahk_pid " . DllCall("GetCurrentProcessId")
+        }
+    }
+return
+
 UpdateActive:
     If(WinActive("ahk_id " . this_id))
     {
@@ -1463,10 +1491,12 @@ UpdateActive:
         ; WinRestore, ahk_id %this_id%
         ; WinActivate, ahk_id %this_id%
         ; WinActivate, ahk_id %this_id%
+        GoSub, SetTransparency
     }
     else
     {
         ToolTip
+        GoSub, SetTransparency
     }
 Return
 
