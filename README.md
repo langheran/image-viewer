@@ -1,5 +1,10 @@
-## Image Viewer
+## Image Viewer <!-- omit in toc -->
 
+[![start with why](https://img.shields.io/badge/autohotkey%20build-passing%3F-brightgreen.svg?style=flat)] [![License](https://img.shields.io/badge/License-MIT-blue.svg)]
+- [Global keys](#global-keys)
+- [Local (window focused) keys](#local-window-focused-keys)
+- [Docked view](#docked-view)
+- [Open menu (`Right click` or `o`)](#open-menu-right-click-or-o)
 
 ### Global keys
 
@@ -51,3 +56,8 @@
 | +y     |  Remove all windows from Y stack.          |
 
 
+### Docked view
+![docked](docs/images/docked.png)
+
+### Open menu (`Right click` or `o`)
+![menu](docs/images/menu.png)
