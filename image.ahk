@@ -242,7 +242,7 @@ UpdateRecentSessions()
 i:=1
 for k, v in recentSessions
 {
-    if(i>=9)
+    if(i>=10)
         break
 	if(command<>v || True)
 	{
@@ -263,7 +263,7 @@ RebuildRecentCommands(command)
 i:=1
 for k, v in recentCommands
 {
-    if(i>=9)
+    if(i>=10)
         break
 	if(command<>v || True)
 	{
@@ -283,7 +283,7 @@ Menu, Tray, Add
 i:=1
 Loop, Files, %clipboardDirectory%\*.*
 {
-    if(i>=9)
+    if(i>=10)
         break
     if A_LoopFileExt in png
     {
