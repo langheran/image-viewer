@@ -1374,7 +1374,7 @@ Gui, Main: Show, %newY%
 return
 
 q::
-IniDelete, %A_ScriptDir%\image.ini,stackY
+    IniDelete, %A_ScriptDir%\image.ini,stackY,%imageFile%
 return
 
 !#^q::
