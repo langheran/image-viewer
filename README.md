@@ -10,7 +10,7 @@
 
 | Hotkey | Action                        |
 | ------ | ----------------------------- |
-| #s     | Select area for screenshot.   |
+| +#s     | Select area for screenshot.   |
 | ^#c    | Screenshot of current window. |
 | #\|    | Activate window.              |
 | !\|    | Restore all windows.          |

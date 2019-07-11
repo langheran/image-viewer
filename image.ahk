@@ -824,7 +824,7 @@ SaveRecentSessions(command=0)
 
 #IfWinActive
 
-#s::
++#s::
 force_keys:=1
 Suspend, Off
 SetSystemCursor("IDC_CROSS")
