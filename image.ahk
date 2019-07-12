@@ -1628,7 +1628,7 @@ else
     Loop, Parse, FileList, `n, `r
     {
         selFile:=A_LoopField
-        if(!FileExist(selFile))
+        if(!FileExist(selFile) && SubStr(selFile,2,2)=":\")
         {
             oldSectionName:=selFile
             SplitPath, oldSectionName, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
@@ -1651,7 +1651,7 @@ RenameIniSection(iniFile, oldSectionName, newSectionName)
         MsgBox, File read of %iniFIle% failed...
         return
     }
-    iniData:=StrReplace(iniData,oldSectionName,newSectionName)
+    iniData:=StrReplace(iniData,"[" . oldSectionName . "]","[" . newSectionName . "]")
     FileDelete, %iniFile%
     FileAppend, %iniData%, %iniFile%
 }
