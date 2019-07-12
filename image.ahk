@@ -1381,10 +1381,15 @@ q::
     IniDelete, %A_ScriptDir%\image.ini,stackY,%imageFile%
 return
 
+^w::
+GoSub, SaveAndExitApplication
+return
+
 !#^q::
 CloseOthers(0)
 return
 
+!^w::
 !#q::
 CloseOthers(1)
 return
