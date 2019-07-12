@@ -6,6 +6,8 @@
 - [Docked view](#docked-view)
 - [Open menu (`Right click` or `o`)](#open-menu-right-click-or-o)
 
+![usage](docs/images/usage.gif)
+
 ### Global keys
 
 | Hotkey | Action                        |
