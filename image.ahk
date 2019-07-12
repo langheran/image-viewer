@@ -1639,6 +1639,7 @@ else
                 ReopenRenamedFile(oldSectionName, newSectionName)
         }
     }
+    return
 }
 return
 
