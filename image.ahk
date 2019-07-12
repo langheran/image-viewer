@@ -1455,11 +1455,15 @@ if(stackWindows)
     IniDelete,%A_ScriptDir%\image.ini,stackY
 return
 
-t::
-ToggleTransparency:
+ReadTransparency:
 IniRead, transparency, %A_ScriptDir%\image.ini, %imageFile%, transparency, 0
 if(transparency<>0 and transparency<>1)
     transparency:=0
+return
+
+t::
+GoSub, ReadTransparency
+ToggleTransparency:
 transparency:=!transparency
 IniWrite, %transparency%, %A_ScriptDir%\image.ini, %imageFile%, transparency
 if(transparency)
@@ -1468,6 +1472,7 @@ else
     ToolTip, Transparency OFF,%toolTipX%,%toolTipY%
 SetTimer, viewTitle, -1000
 SetTransparency:
+    GoSub, ReadTransparency
     if(transparency)
     {
         If(WinActive("ahk_id " . this_id))
