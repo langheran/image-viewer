@@ -1586,7 +1586,7 @@ ReopenRenamedFile(FileOrigin, FileDestiny)
     }
 }
 
-F7::
+^F7::
 selFile:=ShellFile()
 if(selFile="")
 {

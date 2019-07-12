@@ -4,6 +4,7 @@
 - [Keyboard-only (no mouse) usage spoiler](#keyboard-only-no-mouse-usage-spoiler)
 - [Global keys](#global-keys)
 - [Local (window focused) keys](#local-window-focused-keys)
+- [Explorer keys](#explorer-keys)
 - [Docked view](#docked-view)
 - [Open menu (`Right click` or `o`)](#open-menu-right-click-or-o)
 
@@ -60,7 +61,14 @@
 | ^y     |  Dock Y position using stack distance.          |
 | +y     |  Remove all windows from Y stack.          |
 | t     |  Toggle transparency.          |
+| ^x     |  Cut image from location.          |
+| F2     |  Rename image.          |
 
+### Explorer keys
+| Hotkey | Action                            |
+| ------ | --------------------------------- |
+| ^F2     |  Rename image to current datetime and preserve settings.          |
+| ^F7     |  Open folder as session.          |
 
 ### Docked view
 ![docked](docs/images/docked.png)
