@@ -61,7 +61,7 @@
 | ^y     |  Dock Y position using stack distance.          |
 | +y     |  Remove all windows from Y stack.          |
 | t     |  Toggle transparency.          |
-| ^x     |  Cut image from location.          |
+| ^x     |  Cut image file from location.          |
 | F2     |  Rename image.          |
 
 ### Explorer keys
