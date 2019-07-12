@@ -20,6 +20,8 @@ GetModuleCommandLineFileHash:={}
 
 GoSub, ResumeOnMessage
 
+GoSub, SetExploraGroup
+
 IniRead,clipboardDirectory,%A_ScriptDir%\image.ini,settings,clipboardDirectory,%A_ScriptDir%\clipboard
 IniWrite, %clipboardDirectory%,%A_ScriptDir%\image.ini,settings,clipboardDirectory
 baseFile:=A_ScriptDir . "\image.png"
@@ -143,6 +145,17 @@ if(dock_image)
     GoSub, DockImage
 IniWrite, 1, %A_ScriptDir%\image.ini, %imageFile%, opened
 IniWrite, 0, %A_ScriptDir%\image.ini, %imageFile%, reload
+return
+
+SetExploraGroup:
+GroupAdd, Explora, ahk_class Progman
+GroupAdd, Explora, ahk_class CabinetWClass
+GroupAdd, Explora, ahk_class ExploreWClass
+GroupAdd, Explora, ahk_class SysListView321
+GroupAdd, Explora, ahk_class SysListView32
+GroupAdd, Explora, FolderView
+GroupAdd, Explora, DeskTask
+GroupAdd, Explora, ahk_class WorkerW
 return
 
 OpenImagesFolder:
@@ -1023,6 +1036,11 @@ GDIplusEnd:
 GDIplus_Stop() 
 Return 
 
+~^c::
+~^x::
+isCutting:=0
+return
+
 #|:: ; $#| doesn't work with notepad++
 ActivateSelf0:
 GoSub, SetCurrentDocumentId
@@ -1391,6 +1409,7 @@ q::
     IniDelete, %A_ScriptDir%\image.ini,stackY,%imageFile%
 return
 
+Delete::
 ^w::
 GoSub, SaveAndExitApplication
 return
@@ -1476,6 +1495,23 @@ if(transparency<>0 and transparency<>1)
     transparency:=0
 return
 
+^x::
+isCutting:=1
+return
+
+F2::
+SplitPath, imageFile, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+FormatTime, CurrTime,,dMMMyy-HH.mm
+OutNameNoExtPrev:=OutNameNoExt
+OutNameNoExt:=CurrTime
+InputBox, OutNameNoExt, Enter new name for file "%OutNameNoExtPrev%", , , 400, 100, , , , ,%OutNameNoExt%
+If ErrorLevel
+    Return
+FileDestiny:=OutDir . "\" . OutNameNoExt . "." . OutExtension
+FileMove, %imageFile%, %FileDestiny%
+ReopenRenamedFile(imageFile, FileDestiny)
+return
+
 t::
 GoSub, ReadTransparency
 ToggleTransparency:
@@ -1524,6 +1560,147 @@ SuspendOthers:
 BroadcastData("suspend")
 Suspend, Off
 return
+
+#IfWinActive ahk_group Explora
+^F2::
+selFile:=ShellFile()
+SplitPath, selFile, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+FormatTime, CurrTime,,dMMMyy-HH.mm
+OutFileName:=CurrTime . "." . OutExtension
+FileDestiny:=OutDir . "\" . OutFileName
+FileMove, %selFile%, %FileDestiny%
+ReopenRenamedFile(selFile, FileDestiny)
+SelectFile(FileDestiny)
+return
+
+ReopenRenamedFile(FileOrigin, FileDestiny)
+{
+    global GetModuleCommandLineFileHash
+
+    iniFile:=A_ScriptDir . "\" . "image.ini"
+    RenameIniSection(iniFile, FileOrigin, FileDestiny)
+    if(WinAlreadyOpen(FileOrigin))
+    {
+        Run, "%A_ScriptFullPath%" "%FileDestiny%"
+        WinClose, % "ahk_id " GetGuiIDFromPID(GetModuleCommandLineFileHash[FileOrigin])
+    }
+}
+
+F7::
+selFile:=ShellFile()
+if(selFile="")
+{
+    selFolder:=ShellFolder()
+    selFile:=selFolder
+}
+OpenFolderToSession(selFile)
+return
+
+^v::
+if(isCutting)
+{
+    isCutting:=0
+    selFolder:=ShellFolder()
+    oldSectionName:=imageFile
+    SplitPath, oldSectionName, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+    newSectionName:=selFolder . "\" . OutFileName
+    if(InStr(oldSectionName,clipboardDirectory))
+        FileCopy, %oldSectionName%, %newSectionName%
+    else
+        FileMove, %oldSectionName%, %newSectionName%
+    c:=0
+    while(!FileExist(newSectionName) and c<1000)
+    {
+		Sleep, 100
+		c=c+1
+    }
+    ReopenRenamedFile(oldSectionName, newSectionName)
+}
+else
+{
+    FileList=%Clipboard%
+    Send, ^v
+    selFolder:=ShellFolder()
+    SetTimer, MoveIniSettingsForFile, -1000
+    return
+
+    MoveIniSettingsForFile:
+    Loop, Parse, FileList, `n, `r
+    {
+        selFile:=A_LoopField
+        if(!FileExist(selFile))
+        {
+            oldSectionName:=selFile
+            SplitPath, oldSectionName, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+            newSectionName:=selFolder . "\" . OutFileName
+            iniFile:=A_ScriptDir . "\" . "image.ini"
+            RenameIniSection(iniFile, oldSectionName, newSectionName)
+            if(IsImageFile(oldSectionName))
+                ReopenRenamedFile(oldSectionName, newSectionName)
+        }
+    }
+}
+return
+
+RenameIniSection(iniFile, oldSectionName, newSectionName)
+{
+    FileRead, iniData, %iniFile%
+    if ErrorLevel 
+    {
+        MsgBox, File read of %iniFIle% failed...
+        return
+    }
+    iniData:=StrReplace(iniData,oldSectionName,newSectionName)
+    FileDelete, %iniFile%
+    FileAppend, %iniData%, %iniFile%
+}
+
+OpenFolderToSession(selFile)
+{
+    global imagesFolder
+    FileGetAttrib, Attributes, %selFile%
+    if(!InStr(Attributes, "D"))
+    {
+        SplitPath, selFile,,selFolder
+        OpenFolderToSession(selFile)
+    }
+    else
+    {
+        selFolder:=selFile
+        if(FolderHasImages(selFolder))
+        {
+            imagesFolder:=selFolder
+            GoSub, OpenImagesFolder
+        }
+    }
+}
+
+FolderHasImages(selFile)
+{
+    HasImages:=0
+    extensions:="jpg,png,tif,bmp,gif"
+    Loop, Files, %selFile%\*
+    {
+        if A_LoopFileExt in %extensions%
+        {
+            HasImages:=1
+            Break
+        }
+    }
+    return HasImages
+}
+
+IsImageFile(selFile)
+{
+    ; if(!FileExist(selFile))
+    ;     return 0
+    extensions:="jpg,png,tif,bmp,gif"
+    SplitPath, selFile, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+    if OutExtension in %extensions%
+        return 1
+    else
+        return 0
+}
 
 BroadcastData(StringToSend)
 {
@@ -1971,4 +2148,100 @@ ClipboardSetFiles(FilesToSet, DropEffect := "Copy") {
       Return True
    }
    Return False
+}
+
+ShellFile(hWnd=0)
+{
+   If   hWnd||(hWnd:=WinActive("ahk_class CabinetWClass"))||(hWnd:=WinActive("ahk_class ExploreWClass"))
+   {
+	   windows := ComObjCreate("Shell.Application").Windows
+	   for window in windows
+	   {
+			WindowHwnd:=0
+		   try
+		   	WindowHwnd:=window.hWnd
+			if(!IsObject(window) || !WindowHwnd || window["hWnd"]="") ;window["hWnd"]="")
+			{
+				Process,close,explorer.exe
+				sleep, 50
+				Run, explorer.exe
+				sleep, 1000
+			}
+			break
+	   }
+		For window in windows
+		{
+		doc :=   window.document
+		WindowHwnd:=0
+		try
+		   	WindowHwnd:=window.hWnd
+		}
+		Until   (WindowHwnd && WindowHwnd = hWnd)
+		sFolder :=   doc.folder.self.path, sFocus :=   doc.focuseditem.name
+		For item in doc.selecteditems
+		{
+			if(StrLen(sFolder "\" item.name)>250)
+				msgbox, Too long file name!
+			sSelect .=   (!sSelect ? "" : "`n") sFolder "\" item.name
+		}
+	  Return   sSelect
+   }else if((hWnd:=WinActive("ahk_class Progman"))||(hWnd:=WinActive("ahk_class WorkerW")))
+   {
+		ControlGet, selectedFiles, List, Selected Col1, SysListView321, A
+		if InStr(selectedFiles, "`n")
+		{
+		  these_files := ""
+		  Loop, Parse, selectedFiles, `n, `r
+		  {
+			  if(StrLen(A_Desktop . "\" . A_LoopField)>250)
+				msgbox, Too long file name!
+			these_files .= A_Desktop . "\" . A_LoopField . "`n"
+		  }
+		  return these_files
+		}
+		else
+		{
+			if(StrLen(A_Desktop . "\" . selectedFiles)>250)
+				msgbox, Too long file name!
+		  return A_Desktop . "\" . selectedFiles
+		}
+   }
+}
+
+ShellFolder(hWnd=0)
+{
+   If   hWnd||(hWnd:=WinActive("ahk_class CabinetWClass"))||(hWnd:=WinActive("ahk_class ExploreWClass"))
+   {
+	  windows := ComObjCreate("Shell.Application").Windows
+	   for window in windows
+	   {
+		   WindowHwnd:=0
+		   try
+		   	WindowHwnd:=window.hWnd
+			if(!IsObject(window) || !WindowHwnd || window["hWnd"]="") ;window["hWnd"]="")
+			{
+				Process,close,explorer.exe
+				sleep, 50
+				Run, "explorer.exe"
+				sleep, 1000
+			}
+			break
+	   }
+	  For window in windows
+	  {
+		doc :=   window.document
+		WindowHwnd:=0
+		try
+		   	WindowHwnd:=window.hWnd
+	  }
+	  Until   (WindowHwnd && WindowHwnd = hWnd)
+		sFolder :=   doc.folder.self.path, sFocus :=   doc.focuseditem.name
+		For item in doc.selecteditems
+		sSelect .=   (!sSelect ? "" : "`n") item.name
+	  Return   sFolder
+   }
+   else if((hWnd:=WinActive("ahk_class Progman"))||(hWnd:=WinActive("ahk_class WorkerW")))
+   {
+		return A_Desktop
+   }
 }
