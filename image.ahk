@@ -249,7 +249,8 @@ return
 
 BuildTrayMenu:
 Menu, Tray, NoStandard
-FileInstall, image.ico, image.ico, 1
+if(!FileExist(A_ScriptDir . "\" . "image.ico"))
+    FileInstall, image.ico, %A_ScriptDir%\image.ico, 1
 Menu, Tray, Icon , %A_ScriptDir%/image.ico, , 1 
 command:=LTrim(RTrim(imageFile))
 if(command=baseFile && !HasArgs)
