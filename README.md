@@ -92,7 +92,7 @@ image.exe s
 | ^F7     |  Open folder as session.          |
 
 ### Docked view
-![docked](docs/images/docked.png)
+![docked](docs/images/docked.gif)
 
 ### Open menu (`Right click` or `o`)
 ![menu](docs/images/menu.png)
