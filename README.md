@@ -17,19 +17,19 @@
 
 Open image.
 
-```
+```batch
 image.exe "C:\Users\langh\Pictures\Wallpapers\blue.jpg"
 ```
 
-Open all images in Screenshots folder and save as session.
+Open all images in _Screenshots_ folder and save as session.
 
-```
+```batch
 image.exe "C:\Users\langh\Pictures\Screenshots"
 ```
 
-Open last session.
+Open last saved session.
 
-```
+```batch
 image.exe s
 ```
 
