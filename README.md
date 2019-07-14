@@ -2,6 +2,7 @@
 
 ![start with why](https://img.shields.io/badge/autohotkey%20build-passing-brightgreen.svg?style=flat) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/langheran/image-viewer/master/LICENSE.md)
 - [Keyboard-only (no mouse) usage spoiler](#keyboard-only-no-mouse-usage-spoiler)
+- [Command line usage](#command-line-usage)
 - [Global keys](#global-keys)
 - [Local (window focused) keys](#local-window-focused-keys)
 - [Explorer keys](#explorer-keys)
@@ -11,6 +12,26 @@
 ### Keyboard-only (no mouse) usage spoiler
 
 ![usage](docs/images/usage.gif)
+
+### Command line usage
+
+Open image.
+
+```
+image.exe "C:\Users\langh\Pictures\Wallpapers\blue.jpg"
+```
+
+Open all images in Screenshots folder and save as session.
+
+```
+image.exe "C:\Users\langh\Pictures\Screenshots"
+```
+
+Open last session.
+
+```
+image.exe s
+```
 
 ### Global keys
 

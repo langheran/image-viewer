@@ -119,6 +119,8 @@ if(!HasArgs)
 OnExit, ExitApplication
 GoSub, BuildTrayMenu
 
+if(!FileExist(imageFile))
+    imageFile:=A_ScriptDir . "\image.ico"
 FileGetSize, nBytes, %imageFile%
 FileRead, Bin, *c %imageFile%
 Base64ImageData := Base64Enc( Bin, nBytes, 100, 2 )
@@ -247,6 +249,7 @@ return
 
 BuildTrayMenu:
 Menu, Tray, NoStandard
+FileInstall, image.ico, image.ico, 1
 Menu, Tray, Icon , %A_ScriptDir%/image.ico, , 1 
 command:=LTrim(RTrim(imageFile))
 if(command=baseFile && !HasArgs)
@@ -1490,7 +1493,9 @@ if(stackWindows)
 return
 
 ReadTransparency:
-IniRead, transparency, %A_ScriptDir%\image.ini, %imageFile%, transparency, 0
+IniRead, defaultTransparency, %A_ScriptDir%\image.ini, settings, defaultTransparency, 0
+IniWrite, %defaultTransparency%, %A_ScriptDir%\image.ini, settings, defaultTransparency
+IniRead, transparency, %A_ScriptDir%\image.ini, %imageFile%, transparency, %defaultTransparency%
 if(transparency<>0 and transparency<>1)
     transparency:=0
 return
