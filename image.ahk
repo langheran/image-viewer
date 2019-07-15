@@ -2270,8 +2270,8 @@ OpenDrawboardPDFFile(selFile)
 	{
 		WinWait, Drawboard PDF ahk_exe ApplicationFrameHost.exe,,60
 		WinActivate, Drawboard PDF ahk_exe ApplicationFrameHost.exe
-		WinWait, %name% .*,,60
-		WinActivate, % "ahk_id " . WinExist(name . ".*")
+		WinWait, %name_no_ext% .* ahk_exe ApplicationFrameHost.exe ,,60
+		WinActivate, % "ahk_id " . WinExist(name_no_ext . ".*") . " ahk_exe ApplicationFrameHost.exe"
 	}
 	SetTitleMatchMode, %titleModeAntes%
 }
