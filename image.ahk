@@ -1045,6 +1045,12 @@ Return
 isCutting:=0
 return
 
+F4::
+ToolTip, DrawboardPDF opening,%toolTipX%,%toolTipY%
+OpenDrawboardPDFFile(imageFile)
+ToolTip
+return
+
 #|:: ; $#| doesn't work with notepad++
 ActivateSelf0:
 GoSub, SetCurrentDocumentId
@@ -2251,4 +2257,21 @@ ShellFolder(hWnd=0)
    {
 		return A_Desktop
    }
+}
+
+OpenDrawboardPDFFile(selFile)
+{
+	titleModeAntes:=A_TitleMatchMode
+	SetTitleMatchMode, RegEx
+	drawboardExists:=WinExist(".* Drawboard PDF ahk_exe ApplicationFrameHost.exe")
+	SplitPath, selFile, name, dir, ext, name_no_ext, drive
+	Run, PowerShell.exe -ExecutionPolicy Bypass -file "%A_ScriptDir%\RunUWP.ps1" "Drawboard.DrawboardPDF_gqbn7fs4pywxm!App" "%selFile%",,Hide
+	if(!drawboardExists)
+	{
+		WinWait, Drawboard PDF ahk_exe ApplicationFrameHost.exe,,60
+		WinActivate, Drawboard PDF ahk_exe ApplicationFrameHost.exe
+		WinWait, %name% .*,,60
+		WinActivate, % "ahk_id " . WinExist(name . ".*")
+	}
+	SetTitleMatchMode, %titleModeAntes%
 }
