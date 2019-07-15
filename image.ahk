@@ -1294,7 +1294,7 @@ SaveAs:
     if(is_clipboard_file)
     {
         IniRead, lastFileSaveFolder, %A_ScriptDir%\image.ini, settings, lastSessionSaveFolder, %OutDir%
-        FormatTime, CurrTime,,dMMMyy-HH.mm
+        FormatTime, CurrTime,,HH.mm-dMMMyy
         OutFileName:=CurrTime . ".png"
     }
     else
@@ -1513,7 +1513,7 @@ return
 
 F2::
 SplitPath, imageFile, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
-FormatTime, CurrTime,,dMMMyy-HH.mm
+FormatTime, CurrTime,,HH.mm-dMMMyy
 OutNameNoExtPrev:=OutNameNoExt
 OutNameNoExt:=CurrTime
 InputBox, OutNameNoExt, Enter new name for file "%OutNameNoExtPrev%", , , 400, 100, , , , ,%OutNameNoExt%
@@ -1577,7 +1577,7 @@ return
 ^F2::
 selFile:=ShellFile()
 SplitPath, selFile, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
-FormatTime, CurrTime,,dMMMyy-HH.mm
+FormatTime, CurrTime,,HH.mm-dMMMyy
 OutFileName:=CurrTime . "." . OutExtension
 FileDestiny:=OutDir . "\" . OutFileName
 FileMove, %selFile%, %FileDestiny%
@@ -1617,7 +1617,12 @@ if(isCutting)
     SplitPath, oldSectionName, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
     newSectionName:=selFolder . "\" . OutFileName
     if(InStr(oldSectionName,clipboardDirectory))
+    {
+        FormatTime, CurrTime,,HH.mm-dMMMyy
+        OutFileName:=CurrTime . "." . OutExtension
+        newSectionName:=selFolder . "\" . OutFileName
         FileCopy, %oldSectionName%, %newSectionName%
+    }
     else
         FileMove, %oldSectionName%, %newSectionName%
     c:=0
