@@ -140,7 +140,6 @@ if(_X=-1 || _X="ERROR")
     dock_image:=1
 }
 Gui, Main: Add, Picture, y0 x0 vImage BackgroundTrans, HBITMAP:%hBM%
-Gui, Main: Add, Picture, y0 x0 w200 h200 vOverlayImage hwndhpic +0xE 
 Gui, Main: -Caption +LastFound +AlwaysOnTop +OwnDialogs +Hwndthis_id +Resize ; +ToolWindow
 GoSub, DisplayImage
 WinSet, TransColor, feffff
@@ -149,6 +148,12 @@ if(dock_image)
     GoSub, DockImage
 IniWrite, 1, %A_ScriptDir%\image.ini, %imageFile%, opened
 IniWrite, 0, %A_ScriptDir%\image.ini, %imageFile%, reload
+return
+
+WatchFileChanges:
+FileGetTime, newModifiedDate, %imageFile%
+if(newModifiedDate!=lastModifiedDate && lastModifiedDate)
+    GoSub, ReloadApp
 return
 
 SetExploraGroup:
@@ -407,6 +412,7 @@ SetImageFile(newImageFile)
     global imageFile
     global stackWindows
     global GuiTitle
+    global lastModifiedDate
 
     GoSub, SaveCurrentPosition
     if(stackWindows)
@@ -418,6 +424,9 @@ SetImageFile(newImageFile)
     SplitPath, imageFile, GuiTitle
     IniWrite, %A_Now%, %A_ScriptDir%\image.ini, %imageFile%, LastOpened
     IniWrite, file, %A_ScriptDir%\image.ini, settings, saveDestiny
+    SetTimer, WatchFileChanges, Off
+    FileGetTime, lastModifiedDate, %imageFile%
+    SetTimer, WatchFileChanges, 1000
 }
 
 GetCurrentPosition:
@@ -1222,6 +1231,8 @@ else if (copyDestiny="file")
 return
 
 ^r::
+ReloadApp:
+    GoSub, SaveAll
     IniWrite, 1, %A_ScriptDir%\image.ini, %imageFile%, reload
     command="%A_ScriptFullPath%" "%imageFile%"
     Run, %command%
@@ -1793,6 +1804,7 @@ WM_SINK(wParam, lParam, Msg, hWnd)
 DragWindow:
 if PENCIL
     return
+Tooltip
 CoordMode, Mouse  ; Switch to screen/absolute coordinates.
 MouseGetPos, EWD_MouseStartX, EWD_MouseStartY, EWD_MouseWin
 WinGetPos, EWD_OriginalPosX, EWD_OriginalPosY,,, ahk_id %EWD_MouseWin%
@@ -1807,6 +1819,7 @@ if EWD_LButtonState = U  ; Button has been released, so drag is complete.
 {
     SetTimer, EWD_WatchMouse, Off
     GoSub, SaveCurrentPosition
+    GoSub, viewTitle
     return
 }
 GetKeyState, EWD_EscapeState, Escape, P
@@ -2322,31 +2335,9 @@ InputMsg(wParam, lParam) {
 }
 
 PenCallback(input, lastInput) {
-    global hpic
-    global OverlayImage
-    global imageFile
-
     if (input = PEN_HOVERING)
     {
-        If !pToken := Gdip_Startup()
-        {
-            MsgBox, 48, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
-            ExitApp
-        }
-        hbm := GetImage(hpic)
-        ;hbm := LoadPicture(imageFile)
-        ; BITMAP := getHBMinfo( hbm )
-        ; Tooltip, Drawing
-        G2 := Gdip_GraphicsFromImage(hbm)
-        Gdip_SetSmoothingMode(G2, 4)
-        pBrush := Gdip_BrushCreateSolid(0x8000ff00)
-        Gdip_FillEllipse(G2, pBrush, 0, 0, 100, 100)
-        Gdip_DeleteBrush(pBrush)
-        Gdip_DeleteGraphics(G2)
-        GuiControl, Main:, -Redraw, Image
-        GuiControl, Main:, OverlayImage, HBITMAP:%hBM% 
-        ;GuiControl, Main:, Image, HBITMAP:%hBM% 
-        GuiControl, Main:, +Redraw, Image
+        
     }
 }
 
