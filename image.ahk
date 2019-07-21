@@ -4,6 +4,7 @@
 #Include WinClipAPI.ahk
 #Include WinClip.ahk
 #include FileMD5.ahk
+#include AHKHID.ahk
 #NoEnv
 #Persistent
 #MaxHotkeysPerInterval, 99999999
@@ -139,6 +140,7 @@ if(_X=-1 || _X="ERROR")
     dock_image:=1
 }
 Gui, Main: Add, Picture, y0 x0 vImage BackgroundTrans, HBITMAP:%hBM%
+Gui, Main: Add, Picture, y0 x0 w200 h200 vOverlayImage hwndhpic +0xE 
 Gui, Main: -Caption +LastFound +AlwaysOnTop +OwnDialogs +Hwndthis_id +Resize ; +ToolWindow
 GoSub, DisplayImage
 WinSet, TransColor, feffff
@@ -187,6 +189,7 @@ GoSub, SaveFolderAsSession
 return
 
 ResumeOnMessage:
+WM_INPUT := 0xFF
 OnMessage(0x4a, "Receive_WM_COPYDATA")
 OnMessage(0x201, "WM_LBUTTONDOWN")
 OnMessage(0x204, "WM_RBUTTONDOWN")
@@ -194,9 +197,23 @@ OnMessage(0x05, "WM_SIZE")
 OnMessage(0x06, "TestActive") ; WM_ACTIVATE
 OnMessage(0x07, "TestActive") ; WM_SETFOCUS
 OnMessage(0x08, "TestActive") ; WM_KILLFOCUS
+OnMessage(WM_INPUT, "InputMsg")
+global PEN_NOT_HOVERING := 0x0 ; Pen is moved away from screen.
+global PEN_HOVERING := 0x1 ; Pen is hovering above screen.
+global PEN_TOUCHING := 0x3 ; Pen is touching screen.
+global PEN_2ND_BTN_HOVERING := 0x5 ; 2nd button is pressed.
+WM_INPUT := 0xFF
+USAGE_PAGE := 13
+USAGE := 2
+AHKHID_UseConstants()
+AHKHID_AddRegister(1)
+AHKHID_AddRegister(USAGE_PAGE, USAGE, A_ScriptHwnd, RIDEV_INPUTSINK)
+AHKHID_Register()
+global PENCIL := 0
 return
 
 PauseOnMessage:
+WM_INPUT := 0xFF
 OnMessage(0x4a, "WM_SINK")
 OnMessage(0x201, "WM_SINK")
 OnMessage(0x204, "WM_SINK")
@@ -204,6 +221,7 @@ OnMessage(0x05, "WM_SINK")
 OnMessage(0x06, "WM_SINK") ; WM_ACTIVATE
 OnMessage(0x07, "WM_SINK") ; WM_SETFOCUS
 OnMessage(0x08, "WM_SINK") ; WM_KILLFOCUS
+OnMessage(WM_INPUT, "WM_SINK")
 return
 
 OpenSessionFile:
@@ -596,7 +614,6 @@ return
 ResetWidthHeight:
 hBM := LoadPicture( imageFile )
 BITMAP := getHBMinfo( hBM )
-GuiControlGet, ImagePos, Main:Pos, Image
 _Width:=BITMAP.Width
 _Height:=BITMAP.Height
 _AspectRatio:=_Width/_Height
@@ -605,7 +622,6 @@ return
 ResetWidthHeightRatio:
 hBM := LoadPicture( imageFile )
 BITMAP := getHBMinfo( hBM )
-GuiControlGet, ImagePos, Main:Pos, Image
 _Width:=BITMAP.Width
 _Height:=BITMAP.Height
 _AspectRatio:=_Width/_Height
@@ -1775,6 +1791,8 @@ WM_SINK(wParam, lParam, Msg, hWnd)
 }
 
 DragWindow:
+if PENCIL
+    return
 CoordMode, Mouse  ; Switch to screen/absolute coordinates.
 MouseGetPos, EWD_MouseStartX, EWD_MouseStartY, EWD_MouseWin
 WinGetPos, EWD_OriginalPosX, EWD_OriginalPosY,,, ahk_id %EWD_MouseWin%
@@ -2279,4 +2297,64 @@ OpenDrawboardPDFFile(selFile)
 		WinActivate, % "ahk_id " . WinExist(name_no_ext . ".*") . " ahk_exe ApplicationFrameHost.exe"
 	}
 	SetTitleMatchMode, %titleModeAntes%
+}
+
+InputMsg(wParam, lParam) {
+    Local type, inputInfo, inputData, raw, proc
+    static lastInput := PEN_NOT_HOVERING
+    Critical
+    type := AHKHID_GetInputInfo(lParam, II_DEVTYPE)
+    if (type = RIM_TYPEHID) {
+        PENCIL:=1
+        inputData := AHKHID_GetInputData(lParam, uData)
+	    raw := NumGet(uData, 0, "UInt")
+        proc := (raw >> 8) & 0x1F
+
+        if (proc <> lastInput || proc==PEN_HOVERING) {
+            PenCallback(proc, lastInput)
+            lastInput := proc
+        }
+        else
+            PENCIL:=0
+    }
+    else
+        PENCIL:=0
+}
+
+PenCallback(input, lastInput) {
+    global hpic
+    global OverlayImage
+    global imageFile
+
+    if (input = PEN_HOVERING)
+    {
+        If !pToken := Gdip_Startup()
+        {
+            MsgBox, 48, gdiplus error!, Gdiplus failed to start. Please ensure you have gdiplus on your system
+            ExitApp
+        }
+        hbm := GetImage(hpic)
+        ;hbm := LoadPicture(imageFile)
+        ; BITMAP := getHBMinfo( hbm )
+        ; Tooltip, Drawing
+        G2 := Gdip_GraphicsFromImage(hbm)
+        Gdip_SetSmoothingMode(G2, 4)
+        pBrush := Gdip_BrushCreateSolid(0x8000ff00)
+        Gdip_FillEllipse(G2, pBrush, 0, 0, 100, 100)
+        Gdip_DeleteBrush(pBrush)
+        Gdip_DeleteGraphics(G2)
+        GuiControl, Main:, -Redraw, Image
+        GuiControl, Main:, OverlayImage, HBITMAP:%hBM% 
+        ;GuiControl, Main:, Image, HBITMAP:%hBM% 
+        GuiControl, Main:, +Redraw, Image
+    }
+}
+
+GetImage(hwnd)
+{
+  ;STM_GETIMAGE := 0x173
+  ;If the image is an icon, you may be able to get it using wParam of 1 (IMAGE_ICON) (or with STM_GETICON)
+  ;It is zero here for IMAGE_BITMAP
+  SendMessage, 0x173,0,0,, ahk_id %hwnd%
+  return (ErrorLevel = "FAIL" ? 0 : ErrorLevel)
 }
