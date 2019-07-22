@@ -100,6 +100,10 @@ if(!HasArgs)
         DllCall("CloseClipboard")
         GoSub, SaveImageIntoClipboardFolder
         imageFile:=clipboardBaseFile
+        IniDelete, %A_ScriptDir%\image.ini, %imageFile%, X
+        IniDelete, %A_ScriptDir%\image.ini, %imageFile%, Y
+        IniDelete, %A_ScriptDir%\image.ini, %imageFile%, Width
+        IniDelete, %A_ScriptDir%\image.ini, %imageFile%, Height
         SetImageFile(imageFile)
         dock_image:=1
     }
@@ -154,8 +158,26 @@ return
 WatchFileChanges:
 FileGetTime, newModifiedDate, %imageFile%
 if(newModifiedDate!=lastModifiedDate && lastModifiedDate)
+{
+    if(InStr(imageFile,clipboardDirectory))
+    {
+        number:=GetClipboardCurrentNumber()
+        number:=number+1
+        nextNumber:=SubStr("000" . number, -2)
+        newImageFile:=clipboardDirectory . "\" . nextNumber . ".png"
+        Run, "%A_ScriptFullPath%" "%newImageFile%"
+        ExitApp
+    }
     GoSub, ReloadApp
+}
 return
+
+GetClipboardCurrentNumber()
+{
+    global imageFile
+    SplitPath, imageFile, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+    return (0+OutNameNoExt)
+}
 
 SetExploraGroup:
 GroupAdd, Explora, ahk_class Progman
