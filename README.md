@@ -40,6 +40,24 @@ Open last saved session.
 image.exe s
 ```
 
+Capture image region.
+
+```batch
+image.exe c
+```
+
+Capture window image.
+
+```batch
+image.exe w
+```
+
+Open last image or clipboard.
+
+```batch
+image.exe
+```
+
 ### Tray menu usage
 
 | Menu | Action                        |

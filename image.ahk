@@ -79,6 +79,16 @@ else
             GoSub, OpenSessionFile
         }
     }
+    else if(args="c")
+    {
+        GoSub, CaptureImageRegion
+        ExitApp
+    }
+    else if(args="w")
+    {
+        GoSub, CaptureWindow
+        ExitApp
+    }
     else
         HasArgs:=0
 }
@@ -913,6 +923,7 @@ SaveRecentSessions(command=0)
 #IfWinActive
 
 +#s::
+CaptureImageRegion:
 force_keys:=1
 Suspend, Off
 SetSystemCursor("IDC_CROSS")
@@ -1077,6 +1088,7 @@ RestoreCursors()
 }
 
 ^#c::
+CaptureWindow:
 GoSub, SS_CaptureFullWindow
 CaptureRectangleAndOpen:
 GoSub, SS_CaptureScreenRectangleToClipboard
