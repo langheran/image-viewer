@@ -4,6 +4,7 @@
 - [Keyboard-only (no mouse) usage spoiler](#keyboard-only-no-mouse-usage-spoiler)
 - [How to build](#how-to-build)
 - [Command line usage](#command-line-usage)
+- [Tray menu usage](#tray-menu-usage)
 - [Global keys](#global-keys)
 - [Local (window focused) keys](#local-window-focused-keys)
 - [Explorer keys](#explorer-keys)
@@ -38,6 +39,20 @@ Open last saved session.
 ```batch
 image.exe s
 ```
+
+### Tray menu usage
+
+| Menu | Action                        |
+| ------ | ----------------------------- |
+| Save As... | Save image file. |
+| Save Session As... | Save session file. |
+| Copy as File | Copy image as file to paste in explorer. |
+| Copy as Image | Copy image to clipboard. |
+| Copy as HTML | Copy html decoded image. |
+| Copy as Markdown | Copy markdown image syntax with the image path. |
+| Copy as Latex | Copy markdown includegraphics command with the image path. |
+| Copy as Text | Copy text from image using OCR. |
+| Open Folder | Open image folder. |
 
 ### Global keys
 
