@@ -1,4 +1,7 @@
-cd ocr/bin/Debug/net461/
+cd ocr
+dotnet restore
+dotnet build
+cd bin/Debug/net461/
 xcopy "Tesseract.dll" "..\..\..\..\" /y
 xcopy "ocr.dll" "..\..\..\..\" /y
 xcopy "System.Drawing.Common.dll" "..\..\..\..\" /y
