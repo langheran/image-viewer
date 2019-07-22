@@ -2,6 +2,7 @@
 
 ![start with why](https://img.shields.io/badge/autohotkey%20build-passing-brightgreen.svg?style=flat) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/langheran/image-viewer/master/LICENSE.md)
 - [Keyboard-only (no mouse) usage spoiler](#keyboard-only-no-mouse-usage-spoiler)
+- [How to build](#how-to-build)
 - [Command line usage](#command-line-usage)
 - [Global keys](#global-keys)
 - [Local (window focused) keys](#local-window-focused-keys)
@@ -12,6 +13,11 @@
 ### Keyboard-only (no mouse) usage spoiler
 
 ![usage](docs/images/usage.gif)
+
+### How to build
+
+1. Run `compile_ocr.bat`.
+2. Run `compile_image.bat`.
 
 ### Command line usage
 
