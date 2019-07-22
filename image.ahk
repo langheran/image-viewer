@@ -79,7 +79,7 @@ else
             GoSub, OpenSessionFile
         }
     }
-    else if(args="c")
+    else if(args="r")
     {
         GoSub, CaptureImageRegion
         ExitApp

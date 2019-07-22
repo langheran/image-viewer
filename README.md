@@ -43,7 +43,7 @@ image.exe s
 Capture image region.
 
 ```batch
-image.exe c
+image.exe r
 ```
 
 Capture window image.
