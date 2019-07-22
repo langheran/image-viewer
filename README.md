@@ -43,7 +43,7 @@ image.exe s
 ### Tray menu usage
 
 | Menu | Action                        |
-| ------------ | ------------------------- |
+| ------------------ | -------------------- |
 | Save As... | Save image file. |
 | Save Session As... | Save session file. |
 | Copy as File | Copy image as file to paste in explorer. |
