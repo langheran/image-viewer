@@ -804,15 +804,20 @@ IniWrite, latex, %A_ScriptDir%\image.ini, settings, copyDestiny
 return
 
 CopyAsText:
-CLR_Start()
-asm := CLR_LoadLibrary(A_ScriptDir . "\ocr.dll")
-global ocr := asm.CreateInstance("ocr.Class1")
 if(!FileExist(imageFile))
     msgbox, Image file does not exists.
-Clipboard:=ocr.GetText(imageFile)
+Clipboard:=GetImageText(imageFile)
 msgbox, 64, image.exe, Text copied:`n`n%Clipboard%
 IniWrite, text, %A_ScriptDir%\image.ini, settings, copyDestiny
 return
+
+GetImageText(imageFile)
+{
+    CLR_Start()
+    asm := CLR_LoadLibrary(A_ScriptDir . "\ocr.dll")
+    global ocr := asm.CreateInstance("ocr.Class1")
+    return ocr.GetText(imageFile)
+}
 
 CopyAsFile:
 ClipboardSetFiles(imageFile)
