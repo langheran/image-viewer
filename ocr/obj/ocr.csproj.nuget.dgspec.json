@@ -1,0 +1,65 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\langh\\Desktop\\ocr\\ocr.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\langh\\Desktop\\ocr\\ocr.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\langh\\Desktop\\ocr\\ocr.csproj",
+        "projectName": "ocr",
+        "projectPath": "C:\\Users\\langh\\Desktop\\ocr\\ocr.csproj",
+        "packagesPath": "C:\\Users\\langh\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\langh\\Desktop\\ocr\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\langh\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net461"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {},
+          "https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore-tooling/index.json": {},
+          "https://dotnetfeed.blob.core.windows.net/aspnet-aspnetcore/index.json": {},
+          "https://dotnetfeed.blob.core.windows.net/aspnet-entityframeworkcore/index.json": {},
+          "https://dotnetfeed.blob.core.windows.net/aspnet-extensions/index.json": {},
+          "https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json": {},
+          "https://dotnetfeed.blob.core.windows.net/dotnet-windowsdesktop/index.json": {}
+        },
+        "frameworks": {
+          "net461": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net461": {
+          "dependencies": {
+            "System.Drawing.Common": {
+              "target": "Package",
+              "version": "[4.5.1, )"
+            },
+            "Tesseract": {
+              "target": "Package",
+              "version": "[3.3.0, )"
+            },
+            "UnmanagedExports": {
+              "target": "Package",
+              "version": "[1.2.7, )"
+            }
+          }
+        }
+      }
+    }
+  }
+}

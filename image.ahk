@@ -5,6 +5,7 @@
 #Include WinClip.ahk
 #include FileMD5.ahk
 #include AHKHID.ahk
+#Include CLR.ahk
 #NoEnv
 #Persistent
 #MaxHotkeysPerInterval, 99999999
@@ -343,6 +344,7 @@ Menu, Tray, Add, Copy as &Image, CopyToClipboard
 Menu, Tray, Add, Copy as &HTML, CopyAsHTML
 Menu, Tray, Add, Copy as &Markdown, CopyAsMarkdown
 Menu, Tray, Add, Copy as &Latex, CopyAsLatex
+Menu, Tray, Add, Copy as &Text, CopyAsText
 Menu, Tray, Add, Open &Folder, OpenFolder
 Menu, Tray, Add
 Menu, Tray, Add, Close, ExitApplication
@@ -801,6 +803,16 @@ Clipboard:=include_graphics
 IniWrite, latex, %A_ScriptDir%\image.ini, settings, copyDestiny
 return
 
+CopyAsText:
+CLR_Start()
+asm := CLR_LoadLibrary("ocr.dll")
+global ocr := asm.CreateInstance("ocr.Class1")
+Sleep, 100
+Clipboard:=ocr.GetText(imageFile)
+msgbox, 64, image.exe, Text copied:`n`n%Clipboard%
+IniWrite, text, %A_ScriptDir%\image.ini, settings, copyDestiny
+return
+
 CopyAsFile:
 ClipboardSetFiles(imageFile)
 IniWrite, file, %A_ScriptDir%\image.ini, settings, copyDestiny
@@ -1223,6 +1235,10 @@ else if (copyDestiny="html")
 else if (copyDestiny="latex")
 {
     GoSub, CopyAsLatex
+}
+else if (copyDestiny="text")
+{
+    GoSub, CopyAsText
 }
 else if (copyDestiny="file")
 {

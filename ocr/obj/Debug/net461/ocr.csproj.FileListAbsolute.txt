@@ -1,0 +1,16 @@
+C:\Users\langh\Desktop\ocr\bin\Debug\net461\x86\liblept1753.dll
+C:\Users\langh\Desktop\ocr\bin\Debug\net461\x86\libtesseract3052.dll
+C:\Users\langh\Desktop\ocr\bin\Debug\net461\x64\liblept1753.dll
+C:\Users\langh\Desktop\ocr\bin\Debug\net461\x64\libtesseract3052.dll
+C:\Users\langh\Desktop\ocr\bin\Debug\net461\ocr.dll
+C:\Users\langh\Desktop\ocr\bin\Debug\net461\ocr.pdb
+C:\Users\langh\Desktop\ocr\bin\Debug\net461\System.Drawing.Common.dll
+C:\Users\langh\Desktop\ocr\bin\Debug\net461\Tesseract.dll
+C:\Users\langh\Desktop\ocr\obj\Debug\net461\ocr.csprojAssemblyReference.cache
+C:\Users\langh\Desktop\ocr\obj\Debug\net461\ocr.csproj.CoreCompileInputs.cache
+C:\Users\langh\Desktop\ocr\obj\Debug\net461\ocr.AssemblyInfoInputs.cache
+C:\Users\langh\Desktop\ocr\obj\Debug\net461\ocr.AssemblyInfo.cs
+C:\Users\langh\Desktop\ocr\obj\Debug\net461\ocr.csproj.CopyComplete
+C:\Users\langh\Desktop\ocr\obj\Debug\net461\ocr.dll
+C:\Users\langh\Desktop\ocr\obj\Debug\net461\ocr.pdb
+C:\Users\langh\Desktop\ocr\bin\Debug\net461\RGiesecke.DllExport.Metadata.dll
