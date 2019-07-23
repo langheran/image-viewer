@@ -59,6 +59,8 @@ Open last image or clipboard.
 image.exe
 ```
 
+**Hint:** For each of these options you can create a shortcut on your desktop and then assign it a shortcut key. 
+
 ### Tray menu usage
 
 | Menu | Action                        |
