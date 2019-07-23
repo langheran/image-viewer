@@ -18,7 +18,8 @@
 ### How to build
 
 1. Run `compile_ocr.bat`. This is only required to compile the managed code shared library loaded dynamically by `Copy as Text`. 
-2. Run `compile_image.bat`.
+    1. You need _dotnet core_ and _tessdata v3.0.2_.
+3. Run `compile_image.bat`.
 
 ### Command line usage
 
