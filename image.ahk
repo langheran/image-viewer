@@ -384,6 +384,8 @@ Menu, Tray, Add, Copy as &HTML, CopyAsHTML
 Menu, Tray, Add, Copy as &Markdown, CopyAsMarkdown
 Menu, Tray, Add, Copy as &Latex, CopyAsLatex
 Menu, Tray, Add, Copy as &Text, CopyAsText
+Menu, Tray, Add, Copy as &Path, CopyAsPath
+Menu, Tray, Add, File Properties, ViewFileProperties
 Menu, Tray, Add, Open &Folder, OpenFolder
 Menu, Tray, Add
 Menu, Tray, Add, Close, ExitApplication
@@ -848,6 +850,22 @@ if(!FileExist(imageFile))
 Clipboard:=GetImageText(imageFile)
 msgbox, 64, image.exe, Text copied:`n`n%Clipboard%
 IniWrite, text, %A_ScriptDir%\image.ini, settings, copyDestiny
+return
+
+CopyAsPath:
+    Clipboard:=imageFile
+return
+
+ViewFileProperties:
+    PropertiesWindow:=".*" . OutFileName . ".* ahk_class #32770 ahk_exe image.exe"
+    Run, properties "%imageFile%"
+    WinWait, %PropertiesWindow%,,1
+    SplitPath, imageFile, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+    titleModeAntes:=A_TitleMatchMode
+	SetTitleMatchMode, RegEx
+    properties_id:=WinExist(PropertiesWindow)
+    Winset, Alwaysontop, ,ahk_id %properties_id%
+    SetTitleMatchMode, %titleModeAntes%
 return
 
 GetImageText(imageFile)
