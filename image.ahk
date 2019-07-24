@@ -146,7 +146,7 @@ VectorImage.BinaryData := Base64ToComByteArray( Base64ImageData )
 Picture := VectorImage.Picture
 VectorImage := "" 
 hBM := Picture.Handle
-
+GoSub, ActivateSelf0
 Gui, Main: Margin, 0, 0
 Gui, Main: Color, feffff
 BITMAP := getHBMinfo( hBM ) 
