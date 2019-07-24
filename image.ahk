@@ -116,6 +116,7 @@ if(!HasArgs)
         IniDelete, %A_ScriptDir%\image.ini, %imageFile%, Height
         SetImageFile(imageFile)
         dock_image:=1
+        reload_for_clipboard:=1
     }
     else
     {
@@ -163,6 +164,12 @@ if(dock_image)
     GoSub, DockImage
 IniWrite, 1, %A_ScriptDir%\image.ini, %imageFile%, opened
 IniWrite, 0, %A_ScriptDir%\image.ini, %imageFile%, reload
+if(reload_for_clipboard)
+{
+    command="%A_ScriptFullPath%" "%imageFile%"
+    Run, %command%
+    ExitApp
+}
 return
 
 WatchFileChanges:
