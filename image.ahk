@@ -146,7 +146,6 @@ VectorImage.BinaryData := Base64ToComByteArray( Base64ImageData )
 Picture := VectorImage.Picture
 VectorImage := "" 
 hBM := Picture.Handle
-GoSub, ActivateSelf0
 Gui, Main: Margin, 0, 0
 Gui, Main: Color, feffff
 BITMAP := getHBMinfo( hBM ) 
@@ -164,6 +163,7 @@ if(dock_image)
     GoSub, DockImage
 IniWrite, 1, %A_ScriptDir%\image.ini, %imageFile%, opened
 IniWrite, 0, %A_ScriptDir%\image.ini, %imageFile%, reload
+GoSub, ActivateSelf0
 if(reload_for_clipboard)
 {
     command="%A_ScriptFullPath%" "%imageFile%"
