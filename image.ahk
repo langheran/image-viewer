@@ -865,6 +865,9 @@ ViewFileProperties:
 	SetTitleMatchMode, RegEx
     properties_id:=WinExist(PropertiesWindow)
     Winset, Alwaysontop, ,ahk_id %properties_id%
+    SendMessage, 0x1330, 3,, SysTabControl321, ahk_id %properties_id%  ; 0x1330 is TCM_SETCURFOCUS.
+    Sleep 0  ; This line and the next are necessary only for certain tab controls.
+    SendMessage, 0x130C, 3,, SysTabControl321, ahk_id %properties_id%  ; 0x130C is TCM_SETCURSEL.
     SetTitleMatchMode, %titleModeAntes%
 return
 
@@ -1468,6 +1471,10 @@ return
 
 SuspendOff:
 Suspend, Off
+return
+
+!Enter::
+    GoSub, ViewFileProperties
 return
 
 +Left::
