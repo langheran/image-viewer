@@ -1157,7 +1157,6 @@ For k, v In classes
 return
 
 SetCurrentDocumentId:
-Critical
 if(WinActive("ahk_pid " . DllCall("GetCurrentProcessId")) || WinActive("ahk_exe image.exe"))
 	return
 WinGet, currentDocumentId, ID, A
