@@ -1264,7 +1264,7 @@ GetCurrentRatio()
 }
 
 DockImage:
-ratio:=4
+ratio:=2
 GoSub, ResetWithRatio
 return
 
@@ -1614,7 +1614,7 @@ if(stackWindows)
 return
 
 ReadTransparency:
-IniRead, defaultTransparency, %A_ScriptDir%\image.ini, settings, defaultTransparency, 0
+IniRead, defaultTransparency, %A_ScriptDir%\image.ini, settings, defaultTransparency, 1
 IniWrite, %defaultTransparency%, %A_ScriptDir%\image.ini, settings, defaultTransparency
 IniRead, transparency, %A_ScriptDir%\image.ini, %imageFile%, transparency, %defaultTransparency%
 if(transparency<>0 and transparency<>1)
