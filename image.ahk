@@ -1730,11 +1730,13 @@ if(isCutting)
     oldSectionName:=imageFile
     SplitPath, oldSectionName, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
     newSectionName:=selFolder . "\" . OutFileName
+    newSectionName:=EnsureNewFileName(newSectionName)
     if(InStr(oldSectionName,clipboardDirectory))
     {
         FormatTime, CurrTime,,HH.mm-dMMMyy
         OutFileName:=CurrTime . "." . OutExtension
         newSectionName:=selFolder . "\" . OutFileName
+        newSectionName:=EnsureNewFileName(newSectionName)
         FileCopy, %oldSectionName%, %newSectionName%
     }
     else
@@ -1773,6 +1775,38 @@ else
     return
 }
 return
+
+EnsureNewFileName(filePath)
+{
+    if(FileExist(filePath))
+    {
+        SplitPath, filePath, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+        FileGetAttrib, Attributes, %filePath%
+        version:=1
+        If(InStr(Attributes, "D"))
+        {
+            newFilePath=%OutDir%`\%OutNameNoExt%_%version%
+        }
+        else
+        {
+            newFilePath=%OutDir%`\%OutNameNoExt%_%version%.%OutExtension%
+        }
+        FileMove, %filePath%, %newFilePath%
+        while(FileExist(filePath) || version==1)
+        {
+            version:=version+1
+            If(InStr(Attributes, "D"))
+            {
+                filePath=%OutDir%`\%OutNameNoExt%_%version%
+            }
+            else
+            {
+                filePath=%OutDir%`\%OutNameNoExt%_%version%.%OutExtension%
+            }
+        }
+    }
+    return filePath
+}
 
 RenameIniSection(iniFile, oldSectionName, newSectionName)
 {
