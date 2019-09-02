@@ -678,11 +678,12 @@ hBM := LoadPicture( imageFile )
 BITMAP := getHBMinfo( hBM )
 _Width:=BITMAP.Width
 _Height:=BITMAP.Height
-_AspectRatio:=_Width/_Height
+SetFormat, Float, 0.15
+_AspectRatio:=0.0+_Width/_Height
 
 SysGet, Monitor, MonitorWorkArea
 MonitorWidth:=MonitorRight ;-450
-_Width:=0+(ratio/8)*(MonitorWidth)
+_Width:=0.0+(ratio/8)*MonitorWidth ; 
 _Height:=_Width/_AspectRatio
 return
 
@@ -786,7 +787,7 @@ return
 
 UpdateNewPositionValues:
 floatFormat:=A_FormatFloat 
-SetFormat, float, 0.0
+SetFormat, Float, 0.15
   newX=x%_X%
   if(!_X || _X=-1 || _X="" || _X="ERROR")
     newX:=""
@@ -1272,7 +1273,7 @@ GetCurrentRatio()
 {
     global this_id
     floatFormat:=A_FormatFloat 
-    SetFormat, float, 0.0
+    SetFormat, Float, 0.15
     WinGetPos ,,, WindowWidth, WindowHeight, ahk_id %this_id%
     SysGet, Monitor, MonitorWorkArea
     MonitorWidth:=MonitorRight
