@@ -92,7 +92,8 @@ image.exe
 | Esc    | Exit application.                 |
 | F5     | Reload image.                     |
 | o      | Show tray menu.                   |
-| f      | Open current folder.              |
+| ^o      | Open current folder.              |
+| f      | Toggle fullscreen.              |
 | r      | Reset position and aspect ratio.  |
 | !#-    | Decrease size and dock to bottom. |
 | -      | Decrease size.                    |
