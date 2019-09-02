@@ -147,6 +147,7 @@ Picture := VectorImage.Picture
 VectorImage := "" 
 hBM := Picture.Handle
 Gui, Main: Margin, 0, 0
+Gui, Main: -dpiscale
 Gui, Main: Color, feffff
 BITMAP := getHBMinfo( hBM ) 
 GoSub, LoadCurrentSettings
@@ -672,6 +673,7 @@ _AspectRatio:=_Width/_Height
 return
 
 ResetWidthHeightRatio:
+ShowInFullScreen:=0
 hBM := LoadPicture( imageFile )
 BITMAP := getHBMinfo( hBM )
 _Width:=BITMAP.Width
@@ -762,10 +764,22 @@ LoadImage:
 Return
 
 DisplayImage:
-GoSub, UpdateNewPositionValues
-GuiControl, Main: Move, Image, %newWidth% %newHeight%
 ;Gui, Main: Hide
-Gui, Main: Show, %newX% %newY% %newWidth% %newHeight%, %GuiTitle%
+if(ShowInFullScreen)
+{
+    SysGet, Monitor, MonitorWorkArea
+    fullWidth:=MonitorRight
+    fullHeight:=MonitorBottom
+    Gui, Main: Show, x-7 y-7 w%fullWidth% h%fullHeight%, %GuiTitle%
+    GuiControl, Main: Move, Image, w%fullWidth% h%fullHeight%
+    GoSub, ActivateDocument
+}
+else
+{
+    GoSub, UpdateNewPositionValues
+    GuiControl, Main: Move, Image, %newWidth% %newHeight%
+    Gui, Main: Show, %newX% %newY% %newWidth% %newHeight%, %GuiTitle%
+}
 GoSub, viewTitle
 ; this_id:=WinExist("Ahk_PID " this_pid)
 return
@@ -1203,7 +1217,7 @@ $o::
     CoordMode, Menu, Screen
     Menu Tray, Show, 0, 0
 return
-$f::
+$^o::
     GoSub, OpenFolder
 return
 r::
@@ -1238,6 +1252,10 @@ if(ratio<0)
 if(ratio<8)
     ratio:=ratio+1
 GoSub, ResetWithRatio
+return
+
+f::
+GoSub, FullScreenToggle
 return
 
 +::
@@ -1283,6 +1301,17 @@ GoSub, ResetY0Position
 GoSub, LoadImage
 GoSub, DisplayImage
 GoSub, SaveNewPosition
+return
+
+FullScreenToggle:
+ShowInFullScreen:=!ShowInFullScreen
+if(ShowInFullScreen)
+{
+    GoSub, LoadImage
+    GoSub, DisplayImage
+}
+else
+    GoSub, ResetWithRatio
 return
 
 ^c::
