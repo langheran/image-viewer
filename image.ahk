@@ -681,7 +681,7 @@ _Height:=BITMAP.Height
 _AspectRatio:=_Width/_Height
 
 SysGet, Monitor, MonitorWorkArea
-MonitorWidth:=MonitorRight-450
+MonitorWidth:=MonitorRight ;-450
 _Width:=0+(ratio/8)*(MonitorWidth)
 _Height:=_Width/_AspectRatio
 return
