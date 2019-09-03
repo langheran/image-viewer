@@ -683,8 +683,7 @@ _AspectRatio:=0.0+_Width/_Height
 
 SysGet, Monitor, MonitorWorkArea
 MonitorWidth:=MonitorRight ;-450
-_Width:=0.0+(ratio/8)*MonitorWidth ; 
-msgbox, % _Width " - " MonitorWidth " - " ratio
+_Width:=0.0+(ratio/8)*MonitorWidth ;
 _Height:=_Width/_AspectRatio
 return
 
