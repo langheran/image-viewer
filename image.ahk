@@ -684,6 +684,7 @@ _AspectRatio:=0.0+_Width/_Height
 SysGet, Monitor, MonitorWorkArea
 MonitorWidth:=MonitorRight ;-450
 _Width:=0.0+(ratio/8)*MonitorWidth ; 
+msgbox, % _Width " - " MonitorWidth " - " ratio
 _Height:=_Width/_AspectRatio
 return
 
@@ -1273,7 +1274,7 @@ GetCurrentRatio()
 {
     global this_id
     floatFormat:=A_FormatFloat 
-    SetFormat, Float, 0.15
+    SetFormat, Float, 0.0
     WinGetPos ,,, WindowWidth, WindowHeight, ahk_id %this_id%
     SysGet, Monitor, MonitorWorkArea
     MonitorWidth:=MonitorRight
