@@ -1141,7 +1141,18 @@ return
 
 SS_CaptureFullWindow: 
 WinGetActiveStats, SS_ActiveWindowTitle, SS_GDIWidth, SS_GDIHeight, SS_GDIStartX, SS_GDIStartY 
+WinGetPos(hWnd:=WinExist(SS_ActiveWindowTitle), SS_GDIStartX, SS_GDIStartY, SS_GDIWidth, SS_GDIHeight)
 return
+
+WinGetPos(hWnd, ByRef x := "", ByRef y := "", ByRef Width := "", ByRef Height := "") {
+	VarSetCapacity(RECT, 16, 0)
+	DllCall("user32\GetClientRect", Ptr,hWnd, Ptr,&RECT)
+	DllCall("user32\ClientToScreen", Ptr,hWnd, Ptr,&RECT)
+	x := NumGet(&RECT, 0, "Int")
+	y := NumGet(&RECT, 4, "Int")
+	Width := NumGet(&RECT, 8, "Int")
+	Height := NumGet(&RECT, 12, "Int")
+}
 
 SS_CaptureScreenRectangleToClipboard:
 pToken := Gdip_Startup()
