@@ -519,43 +519,80 @@ clip1:=FileMD5(newClipboardImagePath)
 clip2:=FileMD5(clipboardDirectory . "\001.png")
 if(clip1<>clip2)
 {
-    FileList =
-    Loop, Files, %clipboardDirectory%\*.*
+    firstClipboardImagePath:=clipboardDirectory . "\001.png"
+    if(FileExist(firstClipboardImagePath))
     {
-    if A_LoopFileExt in png
-        FileList = %FileList%%A_LoopFileName%`n
-    }
-    sort, FileList, fSortByFilenumberDesc
-    FileRead, IniText, %A_ScriptDir%\image.ini
-    NewIniText:=IniText
-    Loop, Parse, FileList, `n
-    {
-        if(Trim(A_LoopField)="")
-            continue
-        filePath:= clipboardDirectory . "\" . A_LoopField
-        if(FileExist(filePath))
+        FileList1 =
+        Loop, Files, %clipboardDirectory%\*.*
         {
-            SplitPath, filePath, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
-            number:=RegexReplace(OutFileName, "m)^([\d]{3})(.*)$","$1")
-            number:=number+1
-            newPath:= OutDir . "\" . SubStr("000" . number, -2) . ".png"
-            ;msgbox, %filePath%`, %newPath%
-            if(number>150)
-                FileDelete, %filePath%
-            else
+            if A_LoopFileExt in png
+                FileList1 = %FileList1%%A_LoopFileName%`n
+        }
+        sort, FileList1, fSortByFilenumberAsc
+        FileList =
+        Loop, Parse, FileList1, `n
+        {
+            SplitPath, A_LoopField,,,,name_no_ext
+            RegExMatch(name_no_ext, "O)[^\d]*([\d]+)[^\d]*([\d]*)[^\d]*([\d]*).*", Obj)
+            number:=Obj[1]+1
+            newPath:= clipboardDirectory . "\" . SubStr("000" . number, -2) . ".png"
+            FileList = %FileList%%A_LoopField%`n
+            if(!FileExist(newPath))
+                break
+        }
+        sort, FileList, fSortByFilenumberDesc
+        FileRead, IniText, %A_ScriptDir%\image.ini
+        NewIniText:=IniText
+        Loop, Parse, FileList, `n
+        {
+            if(Trim(A_LoopField)="")
+                continue
+            filePath:= clipboardDirectory . "\" . A_LoopField
+            if(FileExist(filePath))
             {
-                FileMove, %filePath%, %newPath%
-                StringReplace, NewIniText, NewIniText, [%filePath%], [%newPath%], All
+                SplitPath, filePath, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
+                number:=RegexReplace(OutFileName, "m)^([\d]{3})(.*)$","$1")
+                number:=number+1
+                newPath:= OutDir . "\" . SubStr("000" . number, -2) . ".png"
+                ;msgbox, %filePath%`, %newPath%
+                if(number>150)
+                    FileDelete, %filePath%
+                else
+                {
+                    FileMove, %filePath%, %newPath%
+                    StringReplace, NewIniText, NewIniText, [%filePath%], [%newPath%], All
+                }
             }
         }
+        FileDelete, %A_ScriptDir%\image.ini
+        FileAppend, %NewIniText%, %A_ScriptDir%\image.ini
     }
-    FileDelete, %A_ScriptDir%\image.ini
-    FileAppend, %NewIniText%, %A_ScriptDir%\image.ini
-
-    newPath:=clipboardDirectory . "\001.png"
-    FileCopy, %newClipboardImagePath%, %newPath%
+    FileCopy, %newClipboardImagePath%, %firstClipboardImagePath%
 }
 return
+
+SortByFilenumberAsc(a1, a2){
+    SplitPath, a1, a1_name, a1_dir, a1_ext, a1_name_no_ext, a1_drive
+    SplitPath, a2, a2_name, a2_dir, a2_ext, a2_name_no_ext, a2_drive
+
+    
+    RegExMatch(a1_name_no_ext, "O)[^\d]*([\d]+)[^\d]*([\d]*)[^\d]*([\d]*).*", a1_o)
+    
+    a1:=a1_o[1]*100000
+    if(a1_o[2])
+        a1:=a1+a1_o[2]*1000
+    if(a1_o[3])
+        a1:=a1+a1_o[3]
+    
+    RegExMatch(a2_name_no_ext, "O)[^\d]*([\d]+)[^\d]*([\d]*)[^\d]*([\d]*).*", a2_o)
+    a2:=a2_o[1]*100000
+    if(a2_o[2])
+        a2:=a2+a2_o[2]*1000
+    if(a2_o[3])
+        a2:=a2+a2_o[3]
+    
+	return a1 > a2 ? 1 : a1 < a2 ? -1 : 0
+}
 
 SortByFilenumberDesc(a1, a2){
     SplitPath, a1, a1_name, a1_dir, a1_ext, a1_name_no_ext, a1_drive
