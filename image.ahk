@@ -139,6 +139,12 @@ GoSub, BuildTrayMenu
 if(!FileExist(imageFile))
     imageFile:=A_ScriptDir . "\image.ico"
 FileGetSize, nBytes, %imageFile%
+While(FileExist(imageFile) && (!nBytes || nBytesPrev!=nBytes))
+{
+    nBytesPrev:=nBytes
+    FileGetSize, nBytes, %imageFile%
+    Sleep, 100
+}
 FileRead, Bin, *c %imageFile%
 Base64ImageData := Base64Enc( Bin, nBytes, 100, 2 )
 VectorImage := ComObjCreate( "WIA.Vector" )
