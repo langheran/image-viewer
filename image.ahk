@@ -183,6 +183,13 @@ WatchFileChanges:
 FileGetTime, newModifiedDate, %imageFile%
 if(newModifiedDate!=lastModifiedDate && lastModifiedDate)
 {
+    FileGetSize, nBytes, %imageFile%
+    While(FileExist(imageFile) && (!nBytes || nBytesPrev!=nBytes))
+    {
+        nBytesPrev:=nBytes
+        FileGetSize, nBytes, %imageFile%
+        Sleep, 100
+    }
     if(InStr(imageFile,clipboardDirectory))
     {
         number:=GetClipboardCurrentNumber()
