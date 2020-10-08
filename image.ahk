@@ -823,7 +823,7 @@ if(ShowInFullScreen)
     fullHeight:=MonitorBottom
     Gui, Main: Show, x-7 y-7 w%fullWidth% h%fullHeight%, %GuiTitle%
     GuiControl, Main: Move, Image, w%fullWidth% h%fullHeight%
-    GoSub, ActivateDocument
+    ;GoSub, ActivateDocument
 }
 else
 {
@@ -1269,6 +1269,11 @@ return
 
 #If (WinActive("ahk_pid " . DllCall("GetCurrentProcessId")) && !WinActive("ahk_class #32770"))
 $Esc::
+if(ShowInFullScreen)
+{
+    GoSub, FullScreenToggle
+}
+else
     GoSub, ExitApplication
 return
 F5::
@@ -1344,7 +1349,7 @@ GetCurrentRatio()
 }
 
 DockImage:
-ratio:=2
+ratio:=4
 GoSub, ResetWithRatio
 return
 
@@ -1369,6 +1374,7 @@ FullScreenToggle:
 ShowInFullScreen:=!ShowInFullScreen
 if(ShowInFullScreen)
 {
+    ratio:=GetCurrentRatio()
     GoSub, LoadImage
     GoSub, DisplayImage
 }
