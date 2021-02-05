@@ -1762,6 +1762,22 @@ SetTransparency:
     }
 return
 
+$^t::
+toggleOnTop:=!toggleOnTop
+if(toggleOnTop)
+{
+    ToolTip, Transparency ON,%toolTipX%,%toolTipY%
+    WinSet, AlwaysOnTop, On, A
+}
+else
+{
+    ToolTip, Transparency OFF,%toolTipX%,%toolTipY%
+    WinSet, AlwaysOnTop, Off, A
+}
+SetTimer, viewTitle, -1000
+	
+return
+
 UpdateActive:
     If(WinActive("ahk_id " . this_id))
     {
